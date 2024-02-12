@@ -1,0 +1,29 @@
+{
+  "name": "crud",
+  "version": "1.0.0",
+  "description": "",
+  "main": "SERVER.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:dev": "nodemon server.js",
+    "start:prod": "webpack && node dist/server.js",
+    "start:multi": "node cluster.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sykesses/crud.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sykesses/crud/issues"
+  },
+  "homepage": "https://github.com/Sykesses/crud#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.3",
+    "express": "^4.18.2",
+    "uuid": "^9.0.1"
+  }
+}
