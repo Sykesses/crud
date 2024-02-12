@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { v4: uuidv4 } = require("uuid");
+const { v4: uuidv4, validate: uuidValidate } = require("uuid");
 
 let users = [
   {
@@ -39,7 +39,7 @@ router.get("/", function (req, res) {
   res.status(200).json(users);
 });
 
-router.get("/", (req, res) => {
+router.get("/:userId", (req, res) => {
   const { userId } = req.params;
   if (!uuidValidate(userId)) {
     return res.status(400).json({ message: "Invalid userId" });
@@ -55,8 +55,8 @@ router.post("/", function (req, res) {
   let newItem = {
     id: uuidv4(),
     username: req.body.username,
-    age: req.body.username,
-    hobbies: req.body.username,
+    age: req.body.age,
+    hobbies: req.body.hobbies,
   };
 
   users.push(newItem);
@@ -64,39 +64,30 @@ router.post("/", function (req, res) {
 });
 
 router.put("/:id", function (req, res) {
-  let found = users.find(function (item) {
-    return item.id === parseInt(req.params.id);
-  });
+  const { id } = req.params;
+  const foundIndex = users.findIndex((item) => item.id === id);
 
-  if (found) {
-    let updated = {
-      id: found.id,
-      title: req.body.title,
-      order: req.body.order,
-      completed: req.body.completed,
-    };
-
-    let targetIndex = users.indexOf(found);
-
-    users.splice(targetIndex, 1, updated);
-
-    res.sendStatus(204);
-  } else {
-    res.sendStatus(404);
+  if (foundIndex === -1) {
+    return res.status(400).send("Invalid user id");
   }
+
+  users[foundIndex] = {
+    ...users[foundIndex],
+    ...req.body,
+  };
+
+  res.sendStatus(204);
 });
 
 router.delete("/:id", function (req, res) {
-  let found = users.find(function (item) {
-    return item.id === parseInt(req.params.id);
-  });
+  const { id } = req.params;
+  const foundIndex = users.findIndex((item) => item.id === id);
 
-  if (found) {
-    let targetIndex = users.indexOf(found);
-
-    users.splice(targetIndex, 1);
+  if (foundIndex === -1) {
+    return res.status(400).send("Invalid user id");
   }
 
+  users.splice(foundIndex, 1);
   res.sendStatus(204);
 });
 
